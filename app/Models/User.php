@@ -33,6 +33,7 @@ class User extends Authenticatable
         'profile_pic',
         'dark_mode',
         'google_id',
+        'hub_user_id',
         'last_activity',
     ];
 
