@@ -56,12 +56,12 @@
                                         {{$role->users()->count()}}
                                     </td>
                                     <td class="align-middle text-right p-0 pr-1">
-                                        <a href="{{route('role.show', encrypt($role->id, 'roles'))}}" class="btn btn-info btn-xs mb-0 ml-0">
+                                        <a href="{{route('role.show', encrypt($role->id))}}" class="btn btn-info btn-xs mb-0 ml-0">
                                             <i class="fa fa-list"></i>
                                             {{__('adminlte::utilities.view')}}
                                         </a>
                                         @can('role edit')
-                                            <a href="{{route('role.edit', encrypt($role->id, 'roles'))}}" class="btn btn-success btn-xs mb-0 ml-0">
+                                            <a href="{{route('role.edit', encrypt($role->id))}}" class="btn btn-success btn-xs mb-0 ml-0">
                                                 <i class="fa fa-pen-alt"></i>
                                                 {{__('adminlte::utilities.edit')}}
                                             </a>

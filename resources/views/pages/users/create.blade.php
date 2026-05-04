@@ -28,7 +28,7 @@
                     <div class="col-lg-3">
                         <div class="form-group">
                             {{ html()->label(__('adminlte::utilities.name'), 'name')->class(['mb-0']) }}
-                            {{ html()->input('text', 'name', '')->placeholder(__('adminlte::utilities.name'))->class(['form-control', 'form-control-sm', 'is-invalid' => $errors->has('name')]); }}
+                            {{ html()->input('text', 'name', '')->placeholder(__('adminlte::utilities.name'))->class(['form-control', 'form-control-sm', 'is-invalid' => $errors->has('name')]) }}
                             <small class="text-danger">{{$errors->first('name')}}</small>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                     <div class="col-lg-3">
                         <div class="form-group">
                             {{ html()->label(__('adminlte::utilities.email'), 'email')->class(['mb-0']) }}
-                            {{ html()->input('email', 'email', '')->placeholder(__('adminlte::utilities.email'))->class(['form-control', 'form-control-sm', 'is-invalid' => $errors->has('email')]); }}
+                            {{ html()->input('email', 'email', '')->placeholder(__('adminlte::utilities.email'))->class(['form-control', 'form-control-sm', 'is-invalid' => $errors->has('email')]) }}
                             <small class="text-danger">{{$errors->first('email')}}</small>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="col-lg-3">
                         <div class="form-group">
                             {{ html()->label(__('adminlte::companies.company'), 'company_id')->class(['mb-0']) }}
-                            {{ html()->select('company_id', $companies,'')->class(['form-control', 'form-control-sm', 'is-invalid' => $errors->has('company_id')]); }}
+                            {{ html()->select('company_id', $companies,'')->class(['form-control', 'form-control-sm', 'is-invalid' => $errors->has('company_id')]) }}
                             <small class="text-danger">{{$errors->first('company_id')}}</small>
                         </div>
                     </div>

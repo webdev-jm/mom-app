@@ -52,12 +52,12 @@
                                         {{$location->location_name}}
                                     </td>
                                     <td class="align-middle text-right p-0 pr-1">
-                                        <a href="{{route('location.show', encrypt($location->id, 'roles'))}}" class="btn btn-info btn-xs mb-0 ml-0">
+                                        <a href="{{route('location.show', encrypt($location->id))}}" class="btn btn-info btn-xs mb-0 ml-0">
                                             <i class="fa fa-list"></i>
                                             {{__('adminlte::utilities.view')}}
                                         </a>
                                         @can('location edit')
-                                            <a href="{{route('location.edit', encrypt($location->id, 'roles'))}}" class="btn btn-success btn-xs mb-0 ml-0">
+                                            <a href="{{route('location.edit', encrypt($location->id))}}" class="btn btn-success btn-xs mb-0 ml-0">
                                                 <i class="fa fa-pen-alt"></i>
                                                 {{__('adminlte::utilities.edit')}}
                                             </a>
