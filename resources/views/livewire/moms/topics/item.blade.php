@@ -4,9 +4,10 @@
         <div class="callout callout-info topic-item {{in_array(auth()->user()->id, $detail->responsibles()->pluck('id')->toArray()) ? 'topic-assigned' : ''}}" 
             wire:click="changeView(1)" >
             <h5><b>{{__('adminlte::moms.target_date')}}</b>: {{$detail->target_date}}</h5>
-            <b>{{__('adminlte::moms.topic')}}:</b> {{$detail->topic}}
-            <br>
-            <b>{{__('adminlte::moms.next_step')}}:</b> {{$detail->next_step}}
+            <b>{{__('adminlte::moms.topic')}}:</b>
+            <pre class="topic-pre">{{$detail->topic}}</pre>
+            <b>{{__('adminlte::moms.next_step')}}:</b>
+            <pre class="topic-pre">{{$detail->next_step}}</pre>
             <br>
             <b>{{ __('adminlte::moms.responsible') }}:</b>
             @if($responsible_id)
@@ -80,9 +81,10 @@
                     </button>
                 @else
                     <h5><b>{{__('adminlte::moms.target_date')}}</b>: {{$detail->target_date}}</h5>
-                    <b>{{__('adminlte::moms.topic')}}:</b> {{$detail->topic}}
-                    <br>
-                    <b>{{__('adminlte::moms.next_step')}}:</b> {{$detail->next_step}}
+                    <b>{{__('adminlte::moms.topic')}}:</b>
+                    <pre class="topic-pre">{{$detail->topic}}</pre>
+                    <b>{{__('adminlte::moms.next_step')}}:</b>
+                    <pre class="topic-pre">{{$detail->next_step}}</pre>
                     <br>
                     <b>{{__('adminlte::moms.responsible')}}:</b> {{$detail->responsibles()->first()->name ?? '-'}}
                     <br>
@@ -317,6 +319,21 @@
         .callout a {
             text-decoration: none;
             color: white;
+        }
+        .topic-pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background-color: rgba(0, 0, 0, 0.04);
+            border-left: 3px solid #17a2b8;
+            padding: 4px 10px;
+            border-radius: 0 4px 4px 0;
+            margin: 2px 0 4px;
+        }
+        .dark-mode .topic-pre {
+            background-color: rgba(255, 255, 255, 0.07);
+            border-left-color: #17a2b8;
         }
     </style>
 </div>
