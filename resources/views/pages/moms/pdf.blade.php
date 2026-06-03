@@ -166,6 +166,10 @@
             border: none;
             background-color: transparent;
         }
+        .topic-pre {
+            padding: 2px 8px;
+            margin: 0;
+        }
 
         .page-break {
             page-break-after: always;
@@ -273,11 +277,11 @@
                         <th class="text-center align-middle bg-info">TARGET DATE</th>
                     </tr>
                     <tr>
-                        <td class="text-center w-25">
-                            {{$detail->topic}}
+                        <td class="w-25">
+                            <pre class="topic-pre">{{$detail->topic}}</pre>
                         </td>
-                        <td class="text-justify w-40">
-                            {{$detail->next_step}}
+                        <td class="w-40">
+                            <pre class="topic-pre">{{$detail->next_step}}</pre>
                         </td>
                         <td class="text-center">
                             @foreach($detail->responsibles as $responsible)
