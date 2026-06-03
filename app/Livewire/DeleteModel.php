@@ -13,7 +13,7 @@ class DeleteModel extends Component
 {
     public $password;
     public $error_message;
-    public $model;
+    public $model_id;
     public $name;
     public $model_route;
     public $type;
@@ -22,32 +22,31 @@ class DeleteModel extends Component
         'setDeleteModel' => 'setModel'
     ];
 
-    public function render()
+    /** @var array<string, array{model: class-string, route: string}> */
+    protected array $modelMapping = [
+        'Company' => ['model' => Company::class, 'route' => '/companies'],
+        'User' => ['model' => User::class, 'route' => '/users'],
+        'Role' => ['model' => Role::class, 'route' => '/roles'],
+        'MomType' => ['model' => MomType::class, 'route' => '/mom-types'],
+        'Mom' => ['model' => Mom::class, 'route' => '/moms'],
+        'Location' => ['model' => Location::class, 'route' => '/locations'],
+    ];
+
+    public function render(): \Illuminate\View\View
     {
         return view('livewire.delete-model');
     }
 
-    public function submitForm() {
+    public function submitForm(): mixed
+    {
         $this->error_message = '';
 
-        // Temporarily disable password requirement
-        // To re-enable, uncomment the validation and password check below
-        
-        // $this->validate([
-        //     'password' => 'required'
-        // ]);
-
-        // // check password
-        // if(!Hash::check($this->password, auth()->user()->password)) { // invalid
-        //     $this->error_message = 'incorrect password.';
-        // } else { // delete function
-        
-        // Skip password check for temporary disable
-        $this->model->delete();
+        $model = $this->resolveModel();
+        $model->delete();
 
         activity('delete')
-            ->performedOn($this->model)
-            ->withProperties($this->model)
+            ->performedOn($model)
+            ->withProperties($model)
             ->log(':causer.name has deleted '.$this->type.' ['.$this->name.']');
 
         return redirect()->to($this->model_route)->with([
@@ -55,26 +54,24 @@ class DeleteModel extends Component
         ]);
     }
 
-    public function setModel($type, $model_id) {
-        $model_id = decrypt($model_id);
-        $this->type = $type;
-
-        $modelMapping = [
-            'Company' => ['model' => Company::class, 'route' => '/companies'],
-            'User' => ['model' => User::class, 'route' => '/users'],
-            'Role' => ['model' => Role::class, 'route' => '/roles'],
-            'MomType' => ['model' => MomType::class, 'route' => '/mom-types'],
-            'Mom'   => ['model' => Mom::class, 'route' => '/moms'],
-            'Location' => ['model' => Location::class, 'route' => '/locations'],
-        ];
-
-        if (isset($modelMapping[$type])) {
-            $this->model = app($modelMapping[$type]['model'])::findOrFail($model_id);
-            $this->name = $this->model->name;
-            $this->model_route = $modelMapping[$type]['route'];
-        } else {
+    public function setModel(string $type, string $encryptedId): void
+    {
+        if (!isset($this->modelMapping[$type])) {
             throw new \InvalidArgumentException("Invalid model type: {$type}");
         }
+
+        $this->type = $type;
+        $this->model_id = decrypt($encryptedId);
+        $this->model_route = $this->modelMapping[$type]['route'];
+
+        $model = $this->resolveModel();
+        $this->name = $model->name;
     }
-    
+
+    protected function resolveModel(): \Illuminate\Database\Eloquent\Model
+    {
+        $class = $this->modelMapping[$this->type]['model'];
+
+        return $class::findOrFail($this->model_id);
+    }
 }
