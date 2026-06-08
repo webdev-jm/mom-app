@@ -97,6 +97,10 @@
                                                 <i class="fa fa-file-pdf"></i>
                                                 {{__('adminlte::utilities.print')}}
                                             </a>
+                                            <a href="{{route('mom.exportExcel', encrypt($mom->id))}}" class="btn btn-secondary btn-xs mb-0 ml-0">
+                                                <i class="fa fa-file-excel"></i>
+                                                {{__('adminlte::utilities.export')}}
+                                            </a>
                                         @endcan
                                         @can('mom delete')
                                             @if(auth()->user()->hasRole('superadmin') || $mom->user->id == auth()->user()->id)

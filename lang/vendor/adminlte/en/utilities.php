@@ -39,4 +39,5 @@ return [
     'check'             => 'Check',
     'remove'            => 'Remove',
     'download_template' => 'Download Template',
+    'export'            => 'Export',
 ];
