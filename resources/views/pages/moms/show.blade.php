@@ -27,6 +27,10 @@
                                     <i class="fa fa-file-pdf"></i>
                                     {{__('adminlte::utilities.print')}}
                                 </a>
+                                <a href="{{route('mom.exportExcel', encrypt($mom->id))}}" class="btn btn-secondary btn-sm mb-0 ml-0">
+                                    <i class="fa fa-file-excel"></i>
+                                    {{__('adminlte::utilities.export')}}
+                                </a>
                             @endcan
                         </div>
                     </div>

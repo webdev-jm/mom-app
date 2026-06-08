@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth', 'optimizeImages']], function() {
         Route::get('mom-topic/{id}', [MomController::class, 'topic'])->name('mom.topic');
 
         Route::get('mom-print/{id}', [MomController::class, 'printPDF'])->name('mom.printPDF')->middleware('permission:mom print');
+        Route::get('mom-export/{id}', [MomController::class, 'exportExcel'])->name('mom.exportExcel')->middleware('permission:mom print');
     });
 
     // MOM TYPES ROUTES

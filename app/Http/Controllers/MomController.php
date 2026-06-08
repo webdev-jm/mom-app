@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Session;
 use App\Helpers\MomNumberHelper;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SingleMomExport;
 
 use Carbon\Carbon;
 
@@ -251,4 +253,9 @@ class MomController extends Controller
         return $status;
     }
     
+    public function exportExcel($id) {
+        $mom = Mom::findOrFail(decrypt($id));
+
+        return Excel::download(new SingleMomExport($mom->id), 'mom-'.$mom->mom_number.'-'.time().'.xlsx');
+    }
 }
