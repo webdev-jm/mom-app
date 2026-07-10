@@ -1,7 +1,13 @@
 <div>
-    <div class="card shadow-sm">
+    <div class="card shadow-sm chart-card">
+        <div wire:loading.flex class="chart-loading-overlay">
+            <div class="text-center">
+                <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+                <div class="small mt-2">Updating chart...</div>
+            </div>
+        </div>
         <div class="card-body p-0">
-            <figure class="highcharts-figure">
+            <figure class="highcharts-figure" wire:ignore>
                 <div id="container-1"></div>
             </figure>
         </div>
@@ -31,9 +37,9 @@
                                             '<strong>'+total+'</strong>'
                                         )
                                             .css({
-                                                color: '#000',
                                                 textAnchor: 'middle'
                                             })
+                                            .addClass('dashboard-total-label')
                                             .add();
                                 }
         
@@ -77,7 +83,12 @@
                             dataLabels: [{
                                 enabled: true,
                                 distance: 20,
-                                format: '{point.name}'
+                                format: '{point.name}',
+                                style: {
+                                    color: '#212529',
+                                    fontWeight: '600',
+                                    textOutline: 'none'
+                                }
                             }, {
                                 enabled: true,
                                 distance: -15,

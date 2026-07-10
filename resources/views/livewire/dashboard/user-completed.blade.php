@@ -1,7 +1,13 @@
 <div>
-    <div class="card shadow-sm">
+    <div class="card shadow-sm chart-card">
+        <div wire:loading.flex class="chart-loading-overlay">
+            <div class="text-center">
+                <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+                <div class="small mt-2">Updating chart...</div>
+            </div>
+        </div>
         <div class="card-body p-0">
-            <figure class="highcharts-figure">
+            <figure class="highcharts-figure" wire:ignore>
                 <div id="container-2"></div>
             </figure>
         </div>
@@ -49,7 +55,6 @@
                         verticalAlign: 'top',
                         y: 10,
                         floating: true,
-                        backgroundColor: (Highcharts.defaultOptions.legend.backgroundColor || 'white'),
                         borderColor: '#CCC',
                         borderWidth: 1,
                         shadow: false
@@ -65,9 +70,9 @@
                     },
                     series: data.series.map(s => {
                         if (s.name.toLowerCase() === 'completed') {
-                            s.color = 'green';
+                            s.color = '#59a14f';
                         } else {
-                            s.color = 'navy';
+                            s.color = '#4e79a7';
                         }
                         return s;
                     })

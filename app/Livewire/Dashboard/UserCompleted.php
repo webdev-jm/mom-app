@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class UserCompleted extends Component
 {
+    use InteractsWithDashboardFilters;
+
     public function render()
     {
-        
-
         $data = Mom::query()
             ->select(
                 'u.name',
@@ -23,6 +23,15 @@ class UserCompleted extends Component
             ->leftJoin('users as u', 'u.id', '=', 'mr.user_id')
             ->whereNotNull('u.name')
             ->where('moms.status', '<>', 'draft')
+            ->tap(function ($query) {
+                $this->applyMeetingDateFilters($query, 'moms.meeting_date');
+            })
+            ->when(!empty($this->filter_user_id), function ($query) {
+                $query->where('mr.user_id', $this->filter_user_id);
+            })
+            ->when(!empty($this->filter_status), function ($query) {
+                $query->whereRaw($this->derivedStatusSql('md.') . ' = ?', [$this->filter_status]);
+            })
             ->when(!auth()->user()->hasRole('superadmin') && !auth()->user()->hasRole('admin'), function($query) {
                 $query->where(function($qry) {
                     $qry->whereHas('participants', function($qry1) {
@@ -48,7 +57,7 @@ class UserCompleted extends Component
         ];
 
         foreach ($data as $val) {
-            $series[0]['data'][] = (int) $val->total - (int) $val->completed_total; 
+            $series[0]['data'][] = (int) $val->total - (int) $val->completed_total;
             $series[1]['data'][] = (int) $val->completed_total;
         }
 
@@ -56,7 +65,7 @@ class UserCompleted extends Component
             'categories' => $categories,
             'series' => $series,
         ];
-        
+
         $this->dispatch('update-chart-2', data: $chartData);
 
         return view('livewire.dashboard.user-completed');
