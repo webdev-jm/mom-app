@@ -8,22 +8,32 @@ use Illuminate\Support\Facades\DB;
 
 class Status extends Component
 {
+    use InteractsWithDashboardFilters;
+
     public $statusColors = [
-        'overdue' => '#f15c80', // Reddish
-        'Extended' => '#f7a35c', // Orangish
-        'On time' => '#90ed7d', // Greenish
-        'Open' => '#7cb5ec',   // Bluish
-        'completed' => '#90ed7d', // Default completed, though 'On time' and 'Extended' are more specific
-        'open' => '#7cb5ec',     // Default open, though 'Overdue' is more specific
-        // Add more statuses if needed
+        'Overdue' => '#e15759',
+        'Extended' => '#f28e2c',
+        'On time' => '#59a14f',
+        'Open' => '#4e79a7',
+        'completed' => '#59a14f',
+        'open' => '#4e79a7',
     ];
 
     public function render()
     {
-        // Base query for MomDetail, applying user role filtering
+        // Base query for MomDetail, applying user role and dashboard filters
         $baseQuery = MomDetail::query()
             ->whereHas('mom', function ($query) {
                 $query->where('status', '<>', 'draft');
+                $this->applyMeetingDateFilters($query);
+            })
+            ->when(!empty($this->filter_user_id), function ($query) {
+                $query->whereHas('responsibles', function ($qry) {
+                    $qry->where('id', $this->filter_user_id);
+                });
+            })
+            ->when(!empty($this->filter_status), function ($query) {
+                $query->whereRaw($this->derivedStatusSql() . ' = ?', [$this->filter_status]);
             });
 
         // Apply user-specific filtering if not superadmin or admin
@@ -37,15 +47,7 @@ class Status extends Component
 
         // Get the aggregated status data
         $data = (clone $baseQuery)->select(
-            DB::raw("
-                CASE
-                    WHEN status = 'open' AND DATE(NOW()) > target_date THEN 'Overdue'
-                    WHEN status = 'completed' AND completed_date > target_date THEN 'Extended'
-                    WHEN status = 'completed' AND completed_date <= target_date THEN 'On time'
-                    WHEN status = 'open' AND DATE(NOW()) <= target_date THEN 'Open'
-                    ELSE status
-                END as derived_status
-            "),
+            DB::raw($this->derivedStatusSql() . ' as derived_status'),
             DB::raw('COUNT(*) as total')
         )
         ->groupBy('derived_status')
@@ -60,7 +62,7 @@ class Status extends Component
             $total = $val->total;
 
             // Apply the status color, defaulting to a fallback if not found
-            $color = $this->statusColors[$derivedStatus] ?? '#666666';
+            $color = $this->statusColors[$derivedStatus] ?? '#8a8d93';
 
             $chartData[] = [
                 'name' => $derivedStatus,
@@ -74,21 +76,13 @@ class Status extends Component
 
             // Get the MomDetails that fall under this derived status
             $momDetailsForStatus = (clone $baseQuery)
-                ->whereRaw("
-                    CASE
-                        WHEN status = 'open' AND DATE(NOW()) > target_date THEN 'Overdue'
-                        WHEN status = 'completed' AND completed_date > target_date THEN 'Extended'
-                        WHEN status = 'completed' AND completed_date <= target_date THEN 'On time'
-                        WHEN status = 'open' AND DATE(NOW()) <= target_date THEN 'Open'
-                        ELSE status
-                    END = ?", [$derivedStatus])
-                ->with('responsibles') // Assuming 'responsibles' is a relationship on MomDetail
+                ->whereRaw($this->derivedStatusSql() . ' = ?', [$derivedStatus])
+                ->with('responsibles')
                 ->get();
 
             // Aggregate responsible persons for this derived status
             foreach ($momDetailsForStatus as $momDetail) {
                 foreach ($momDetail->responsibles as $responsible) {
-                    // Assuming 'name' is the attribute for the responsible person's name
                     $name = $responsible->name ?? 'Unassigned'; // Fallback for unassigned or missing name
                     $responsibleCounts[$name] = ($responsibleCounts[$name] ?? 0) + 1;
                 }
@@ -104,7 +98,7 @@ class Status extends Component
                 'id' => $derivedStatus,
                 'data' => $drilldownItems
             ];
-            
+
             $totalTopic += $total;
         }
 

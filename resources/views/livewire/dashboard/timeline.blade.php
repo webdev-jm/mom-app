@@ -1,7 +1,13 @@
 <div>
-    <div class="card shadow-sm">
+    <div class="card shadow-sm chart-card">
+        <div wire:loading.flex class="chart-loading-overlay">
+            <div class="text-center">
+                <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+                <div class="small mt-2">Updating chart...</div>
+            </div>
+        </div>
         <div class="card-body p-0">
-            <figure class="highcharts-figure">
+            <figure class="highcharts-figure" wire:ignore>
                 <div id="container-timeline"></div>
             </figure>
         </div>
@@ -60,9 +66,9 @@
                     plotOptions: {
                         gantt: {
                             completed: {
-                                color: 'green'
+                                color: '#59a14f'
                             },
-                            color: 'navy'
+                            color: '#4e79a7'
                         },
                         // Enable drilldown for series
                         series: {

@@ -171,5 +171,26 @@
     .card .card-footer {
         background-color: rgba(201, 192, 177, 0.2);
     }
+
+    .dark-mode .content-wrapper {
+        background-color: #1f2227;
+    }
+    .dark-mode .main-footer {
+        background-color: #23262d;
+    }
+    .dark-mode .card .card-body {
+        background-color: rgba(255, 255, 255, 0.02);
+    }
+    .dark-mode .card .card-header {
+        background-color: rgba(255, 255, 255, 0.04);
+    }
+    .dark-mode .card .card-footer {
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+    .dark-mode .content-header .text-muted,
+    .dark-mode .content-header .text-dark,
+    .dark-mode .main-footer .text-dark {
+        color: #ced4da !important;
+    }
 </style>
 @endpush
