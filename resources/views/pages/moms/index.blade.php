@@ -15,15 +15,15 @@
                 </div>
                 <div class="col-lg-6 text-right">
                     @can('mom create')
-                        <a href="{{route('mom.create')}}" class="btn btn-primary btn-xs">
+                        <a href="{{route('mom.create')}}" class="btn btn-primary btn-xs" data-toggle="tooltip" title="{{__('adminlte::moms.new_mom')}}">
                             <i class="fa fa-file"></i>
-                            {{__('adminlte::moms.new_mom')}}
+                            <span class="d-none d-md-inline">{{__('adminlte::moms.new_mom')}}</span>
                         </a>
                     @endcan
                     @can('mom upload')
-                        <a href="{{route('mom.upload')}}" class="btn btn-success btn-xs">
+                        <a href="{{route('mom.upload')}}" class="btn btn-success btn-xs" data-toggle="tooltip" title="{{__('adminlte::moms.upload_mom')}}">
                             <i class="fa fa-upload"></i>
-                            {{__('adminlte::moms.upload_mom')}}
+                            <span class="d-none d-md-inline">{{__('adminlte::moms.upload_mom')}}</span>
                         </a>
                     @endcan
                 </div>
@@ -82,31 +82,31 @@
                                     <td class="align-middle text-right p-0 pr-1">
                                         @can('mom edit')
                                             @if($mom->status == 'draft')
-                                                <a href="{{route('mom.edit', encrypt($mom->id))}}" class="btn btn-success btn-xs mb-0 ml-0">
+                                                <a href="{{route('mom.edit', encrypt($mom->id))}}" class="btn btn-success btn-xs mb-0 ml-0" data-toggle="tooltip" title="{{__('adminlte::utilities.edit')}}">
                                                     <i class="fa fa-pen-alt"></i>
-                                                    {{__('adminlte::utilities.edit')}}
+                                                    <span class="d-none d-md-inline">{{__('adminlte::utilities.edit')}}</span>
                                                 </a>
                                             @endif
                                         @endcan
-                                        <a href="{{route('mom.show', encrypt($mom->id))}}" class="btn btn-info btn-xs mb-0 ml-0">
+                                        <a href="{{route('mom.show', encrypt($mom->id))}}" class="btn btn-info btn-xs mb-0 ml-0" data-toggle="tooltip" title="{{__('adminlte::utilities.view')}}">
                                             <i class="fa fa-list"></i>
-                                            {{__('adminlte::utilities.view')}}
+                                            <span class="d-none d-md-inline">{{__('adminlte::utilities.view')}}</span>
                                         </a>
                                         @can('mom print')
-                                            <a href="{{route('mom.printPDF', encrypt($mom->id))}}" class="btn btn-warning btn-xs mb-0 ml-0" target="_blank">
+                                            <a href="{{route('mom.printPDF', encrypt($mom->id))}}" class="btn btn-warning btn-xs mb-0 ml-0" target="_blank" data-toggle="tooltip" title="{{__('adminlte::utilities.print')}}">
                                                 <i class="fa fa-file-pdf"></i>
-                                                {{__('adminlte::utilities.print')}}
+                                                <span class="d-none d-md-inline">{{__('adminlte::utilities.print')}}</span>
                                             </a>
-                                            <a href="{{route('mom.exportExcel', encrypt($mom->id))}}" class="btn btn-secondary btn-xs mb-0 ml-0">
+                                            <a href="{{route('mom.exportExcel', encrypt($mom->id))}}" class="btn btn-secondary btn-xs mb-0 ml-0" data-toggle="tooltip" title="{{__('adminlte::utilities.export')}}">
                                                 <i class="fa fa-file-excel"></i>
-                                                {{__('adminlte::utilities.export')}}
+                                                <span class="d-none d-md-inline">{{__('adminlte::utilities.export')}}</span>
                                             </a>
                                         @endcan
                                         @can('mom delete')
                                             @if(auth()->user()->hasRole('superadmin') || $mom->user->id == auth()->user()->id)
-                                                <a href="" class="btn btn-danger btn-xs mb-0 ml-0 btn-delete" data-id="{{encrypt($mom->id)}}">
+                                                <a href="" class="btn btn-danger btn-xs mb-0 ml-0 btn-delete" data-id="{{encrypt($mom->id)}}" data-toggle="tooltip" title="{{__('adminlte::utilities.delete')}}">
                                                     <i class="fa fa-trash-alt"></i>
-                                                    {{__('adminlte::utilities.delete')}}
+                                                    <span class="d-none d-md-inline">{{__('adminlte::utilities.delete')}}</span>
                                                 </a>
                                             @endif
                                         @endcan
@@ -141,6 +141,20 @@
                 Livewire.dispatch('setDeleteModel', {type: 'Mom', model_id: id});
                 $('#modal-delete').modal('show');
             });
+
+            // Tooltips only below the md breakpoint, where button labels are hidden
+            var iconOnlyView = window.matchMedia('(max-width: 767.98px)');
+
+            function toggleButtonTooltips() {
+                if (iconOnlyView.matches) {
+                    $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover focus' });
+                } else {
+                    $('[data-toggle="tooltip"]').tooltip('dispose');
+                }
+            }
+
+            toggleButtonTooltips();
+            iconOnlyView.addEventListener('change', toggleButtonTooltips);
         });
     </script>
 @endpush
