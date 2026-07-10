@@ -216,6 +216,33 @@ class DashboardFilterTest extends TestCase
     }
 
     /** @test */
+    public function timeline_completion_amount_is_rounded_to_two_decimals(): void
+    {
+        $responsible = User::factory()->create();
+        $mom = Mom::factory()->create(['meeting_date' => now()->format('Y-m-d')]);
+
+        foreach (['completed', 'completed', 'open'] as $status) {
+            $detail = MomDetail::create([
+                'mom_id' => $mom->id,
+                'topic' => 'Test topic',
+                'next_step' => 'Test next step',
+                'target_date' => now()->addWeek(),
+                'completed_date' => $status === 'completed' ? now() : null,
+                'status' => $status,
+            ]);
+
+            $detail->responsibles()->attach($responsible->id);
+        }
+
+        Livewire::actingAs($this->admin)
+            ->test(Timeline::class)
+            ->set('filter_user_id', (string) $responsible->id)
+            ->assertDispatched('update-chart-3', function ($event, $params) {
+                return $params['data'][0]['completed']['amount'] === 0.67;
+            });
+    }
+
+    /** @test */
     public function dashboard_page_renders_the_filter_and_chart_components(): void
     {
         $this->actingAs($this->admin)

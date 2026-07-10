@@ -74,7 +74,7 @@ class Timeline extends Component
                 // Calculate the percentage of completed details for this MOM
                 $totalDetails = $details->count();
                 $completedDetails = $details->where('status', 'completed')->count();
-                $completionPercentage = $totalDetails > 0 ? $completedDetails / $totalDetails : 0;
+                $completionPercentage = $totalDetails > 0 ? round($completedDetails / $totalDetails, 2) : 0;
 
                 // Create a unique ID for this MOM's drilldown series
                 $momDrilldownId = 'mom-' . $mom->id;
